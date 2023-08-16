@@ -9,6 +9,8 @@ namespace DayHospitalBloodSugar;
 
 internal class Sugar
 {
+    public string Row { get; set; } = string.Empty;
+
     public string DateOnly { get; set; } = string.Empty;
 
     public string TimeOnly { get; set; } = string.Empty;

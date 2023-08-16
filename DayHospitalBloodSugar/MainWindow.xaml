@@ -31,5 +31,49 @@
                            Grid.Column="0"
                            Key="Дата рождения:"
                            Value="{Binding BirthDateFull, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+        
+        <ListView Grid.Row="0"
+                  Grid.Column="1" ItemsSource="{Binding Path=Sugars}">
+            
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="№" DisplayMemberBinding="{Binding Path=Row}" />
+                    <GridViewColumn Header="Дата" DisplayMemberBinding="{Binding Path=DateOnly}" />
+                    <GridViewColumn Header="Время" DisplayMemberBinding="{Binding Path=TimeOnly}" />
+                    <GridViewColumn Header="Уровень" DisplayMemberBinding="{Binding Path=Level}" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <TabControl Grid.Row="1"
+                    Grid.Column="1">
+
+            <TabItem Header="Дата">
+                <Calendar  />
+            </TabItem>
+            <TabItem Header="Время">
+                <ListView ItemsSource="{Binding Times}">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn DisplayMemberBinding="{Binding}" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </TabItem>
+            <TabItem Header="Уровень">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Целое число" HorizontalAlignment="Center" />
+                    <ListView Style="{StaticResource ListViewHorizontal}" ItemsSource="{Binding Decimals}" />
+                    <TextBlock Text="Десятичная часть" HorizontalAlignment="Center"/>
+                    <ListView Style="{StaticResource ListViewHorizontal}" ItemsSource="{Binding Fractions}" />
+                    <Button Content="Следующий ряд" HorizontalAlignment="Center"/>
+                </StackPanel>
+
+            </TabItem>
+
+        </TabControl>
+
+
+
     </Grid>
 </Window>

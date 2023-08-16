@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using ClipoardPerson;
 using NetDayHospital.Core.Models.Table.System;
 using NetDayHospital.Core.Models.Table;
+using Microsoft.VisualBasic;
 
 namespace DayHospitalBloodSugar
 {
@@ -19,12 +20,50 @@ namespace DayHospitalBloodSugar
             //person = new Person();
             //person.InitSugars();
             getClipoardPerson = new GetClipoardPerson();
-            
+            InitDecimal();
+            InitFractions();
             InitSugars();
+            InitTimes();
             StartMonitorGetRecordsAsync();
         }
 
-        private List<Parser> InitParsers()
+        [ObservableProperty]
+        private List<Item> _Fractions = new();
+
+        private void InitFractions()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                Fractions.Add(new Item { Name = i.ToString() });
+            }
+        }
+
+        [ObservableProperty]
+        private List<Item> _Decimals = new();
+
+        private void InitDecimal()
+        {
+            for (int i = 3; i < 9; i++)
+            {
+                Decimals.Add(new Item { Name = i.ToString() });
+            }
+        }
+
+        public List<string> Times { get; set; } = new();
+
+        private void InitTimes()
+        {
+            string[] times = { "06.00", "07.00", "08.00", "09.00", "10.00", "11.00", "12.00", "13.00",
+                "14.00", "15.00", "16.00", "17.00", "18.00", "19.00", "20.00", "21.00", "22.00",
+                "23.00", "24.00", "01.00", "02.00", "03.00", "04.00", "05.00", };
+
+            foreach (var item in times)
+            {
+                Times.Add(item);
+            }
+        }
+
+        private static List<Parser> InitParsers()
         {
             List<Parser> parsers = new()
             {
@@ -96,7 +135,7 @@ namespace DayHospitalBloodSugar
         {
             for (int i = 1; i < length; i++)
             {
-                Sugars.Add(new Sugar());
+                Sugars.Add(new Sugar { Row = i.ToString()});
             }
         }
     }    
