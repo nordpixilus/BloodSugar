@@ -3,10 +3,33 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:KeyValue="clr-namespace:Nordpixilus.CCL.KeyValue;assembly=Nordpixilus.CCL"
         xmlns:local="clr-namespace:DayHospitalBloodSugar"
+        d:DataContext="{d:DesignInstance Type=local:MainWindowModel}"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
 
+    <Window.DataContext>
+        <local:MainWindowModel />
+    </Window.DataContext>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        
+        <KeyValue:KeyValue Grid.Row="0"
+                           Grid.Column="0"
+                           Key="Ф.И.О:" Value="{Binding FullName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+        
+        <KeyValue:KeyValue Grid.Row="1"
+                           Grid.Column="0"
+                           Key="Дата рождения:"
+                           Value="{Binding BirthDateFull, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
     </Grid>
 </Window>
