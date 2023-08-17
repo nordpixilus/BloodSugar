@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nordpixilus.CCL", "..\Nordp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClipoardPerson", "..\NetDayHospital.Core\ClipoardPerson\ClipoardPerson.csproj", "{349EA25C-C2BC-4B17-840D-2E1495ACEE1B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BloodSugar", "BloodSugar\BloodSugar.csproj", "{1C2977F0-8424-4EF6-B7E2-9016B9D5011B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,14 @@ Global
 		{349EA25C-C2BC-4B17-840D-2E1495ACEE1B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{349EA25C-C2BC-4B17-840D-2E1495ACEE1B}.Release|x64.ActiveCfg = Release|Any CPU
 		{349EA25C-C2BC-4B17-840D-2E1495ACEE1B}.Release|x64.Build.0 = Release|Any CPU
+		{1C2977F0-8424-4EF6-B7E2-9016B9D5011B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C2977F0-8424-4EF6-B7E2-9016B9D5011B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C2977F0-8424-4EF6-B7E2-9016B9D5011B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1C2977F0-8424-4EF6-B7E2-9016B9D5011B}.Debug|x64.Build.0 = Debug|Any CPU
+		{1C2977F0-8424-4EF6-B7E2-9016B9D5011B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C2977F0-8424-4EF6-B7E2-9016B9D5011B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C2977F0-8424-4EF6-B7E2-9016B9D5011B}.Release|x64.ActiveCfg = Release|Any CPU
+		{1C2977F0-8424-4EF6-B7E2-9016B9D5011B}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
