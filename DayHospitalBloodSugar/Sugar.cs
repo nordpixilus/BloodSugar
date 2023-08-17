@@ -7,7 +7,7 @@ using Windows.System;
 
 namespace DayHospitalBloodSugar;
 
-internal class Sugar
+public class Sugar
 {
     public string Row { get; set; } = string.Empty;
 
