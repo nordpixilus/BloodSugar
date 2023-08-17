@@ -11,14 +11,13 @@ using NetDayHospital.Core.Messages;
 using System.Windows;
 using System;
 using System.Globalization;
-using NetDayHospital.Core.Helpers;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Data;
 
 namespace DayHospitalBloodSugar
 {
-    internal partial class MainWindowModel : BaseViewModel, IRecipient<ChangeDateStartEndMessege>
+    internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateStartEndMessege>
     {
         [ObservableProperty]
         DateStartEndViewModel _DateStartEndViewModel = new();
@@ -156,20 +155,20 @@ namespace DayHospitalBloodSugar
 
         //}
 
-        public void Receive(ChangeDateStartEndMessege message)
+        public void Receive(ComplectDateStartEndMessege message)
         {
             List<string> times = InitTimes();
-            List<string> dates = StringHelper
-                .CreateDiabetDates(
-                 start: DateStartEndViewModel.DateStart!.Value,
-                 end: DateStartEndViewModel.DateEnd!.Value
-                 );
+            //List<string> dates = StringHelper
+            //    .CreateDiabetDates(
+            //     start: DateStartEndViewModel.DateStart!.Value,
+            //     end: DateStartEndViewModel.DateEnd!.Value
+            //     );
             
 
-            for (int i = 1; i < 12; i++)
-            {
-                Sugars.Add(new Sugar { Row = i.ToString(), DateOnly = dates[i-1], TimeOnly = times[i-1] });
-            }
+            //for (int i = 1; i < 12; i++)
+            //{
+            //    Sugars.Add(new Sugar { Row = i.ToString(), DateOnly = dates[i-1], TimeOnly = times[i-1] });
+            //}
 
             SugarsCol = new(Sugars);
 

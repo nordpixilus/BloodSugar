@@ -25,4 +25,10 @@
     <ProjectReference Include="..\..\Nordpixilus.CCL\Nordpixilus.CCL\Nordpixilus.CCL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controls\" />
+    <Folder Include="Documents\" />
+    <Folder Include="Messeges\" />
+  </ItemGroup>
+
 </Project>
