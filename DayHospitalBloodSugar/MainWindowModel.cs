@@ -1,31 +1,42 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using NetDayHospital.Core.Models;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ClipoardPerson;
 using NetDayHospital.Core.Models.Table.System;
-using NetDayHospital.Core.Models.Table;
-using Microsoft.VisualBasic;
+using NetDayHospital.Core.Controls.DateStartEnd;
+using CommunityToolkit.Mvvm.Messaging;
+using NetDayHospital.Core.Messages;
+using System.Windows;
+using System;
+using System.Globalization;
+using NetDayHospital.Core.Helpers;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Windows.Data;
 
 namespace DayHospitalBloodSugar
 {
-    internal partial class MainWindowModel : BaseViewModel
+    internal partial class MainWindowModel : BaseViewModel, IRecipient<ChangeDateStartEndMessege>
     {
+        [ObservableProperty]
+        DateStartEndViewModel _DateStartEndViewModel = new();
+
         public MainWindowModel()
         {
-            //person = new Person();
-            //person.InitSugars();
+            WeakReferenceMessenger.Default.RegisterAll(this);
+            
+            FullName = string.Empty;
+            BirthDateFull = string.Empty;
             getClipoardPerson = new GetClipoardPerson();
             InitDecimal();
+            //InitSugars();
             InitFractions();
-            InitSugars();
-            InitTimes();
             StartMonitorGetRecordsAsync();
         }
+
+
 
         [ObservableProperty]
         private List<Item> _Fractions = new();
@@ -49,18 +60,16 @@ namespace DayHospitalBloodSugar
             }
         }
 
-        public List<string> Times { get; set; } = new();
+       
 
-        private void InitTimes()
-        {
-            string[] times = { "06.00", "07.00", "08.00", "09.00", "10.00", "11.00", "12.00", "13.00",
-                "14.00", "15.00", "16.00", "17.00", "18.00", "19.00", "20.00", "21.00", "22.00",
-                "23.00", "24.00", "01.00", "02.00", "03.00", "04.00", "05.00", };
+        //public List<Item> Times2 { get; set; } = new();
 
-            foreach (var item in times)
-            {
-                Times.Add(item);
-            }
+        private List<string> InitTimes()
+        {            
+            string[] times = { "15.00", "17.00", "19.00", "21.00", "15.00", "20.00", "07.00",
+                "15.00", "20.00", "07.00", "15.00" };            
+
+            return times.ToList();            
         }
 
         private static List<Parser> InitParsers()
@@ -96,7 +105,7 @@ namespace DayHospitalBloodSugar
                 FullName = records["FullName"];
                 BirthDateFull = records["BirthDateFull"];
             }
-        }        
+        }
 
         //private Person person;
 
@@ -106,7 +115,7 @@ namespace DayHospitalBloodSugar
         [NotifyDataErrorInfo]
         [Required]
         [RegularExpression(@"^([А-Я][а-я]+ ?){2,5}", ErrorMessage = "Invalid Social Security Number.")]
-        private string _FullName = string.Empty;
+        private string _FullName;
 
         //partial void OnFullNameChanged(string value)
         //{
@@ -120,7 +129,7 @@ namespace DayHospitalBloodSugar
         [ObservableProperty]
         [NotifyDataErrorInfo]
         [Required]
-        private string _BirthDateFull = string.Empty;
+        private string _BirthDateFull;
 
         //partial void OnBirthDateFullChanged(string value)
         //{
@@ -129,14 +138,50 @@ namespace DayHospitalBloodSugar
 
         #endregion
 
-        public List<Sugar> Sugars { get; set; } = new();
+        [ObservableProperty]
+        private ObservableCollection<Sugar> _SugarsCol;
 
-        internal void InitSugars(int length = 11)
+        [ObservableProperty]
+        public ICollectionView _SugarsView;
+
+        [ObservableProperty]
+        private List<Sugar> _Sugars = new();
+
+        //internal void InitSugars()
+        //{
+        //    for (int i = 1; i < 12; i++)
+        //    {
+        //        Sugars.Add(new Sugar { Row = i.ToString() });
+        //    }
+
+        //}
+
+        public void Receive(ChangeDateStartEndMessege message)
         {
-            for (int i = 1; i < length; i++)
+            List<string> times = InitTimes();
+            List<string> dates = StringHelper
+                .CreateDiabetDates(
+                 start: DateStartEndViewModel.DateStart!.Value,
+                 end: DateStartEndViewModel.DateEnd!.Value
+                 );
+            
+
+            for (int i = 1; i < 12; i++)
             {
-                Sugars.Add(new Sugar { Row = i.ToString()});
+                Sugars.Add(new Sugar { Row = i.ToString(), DateOnly = dates[i-1], TimeOnly = times[i-1] });
             }
+
+            SugarsCol = new(Sugars);
+
+            SugarsView = CollectionViewSource.GetDefaultView(SugarsCol);
+
+            //PeopleCol = new(this.personService.Persons);
+
+            //InitSugars();
+            //for (int i = 1; i < 11; i++)
+            //{
+            //    Sugars.Add(new Sugar { Row = i.ToString(), DateOnly = dates[i-1], TimeOnly = times[i-1] });
+            //}
         }
-    }    
+    }
 }

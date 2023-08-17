@@ -1,4 +1,4 @@
-﻿<Window x:Class="DayHospitalBloodSugar.MainWindow"
+﻿<Window xmlns:DateStartEnd="clr-namespace:NetDayHospital.Core.Controls.DateStartEnd;assembly=NetDayHospital.Core"  x:Class="DayHospitalBloodSugar.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,12 +7,14 @@
         xmlns:local="clr-namespace:DayHospitalBloodSugar"
         d:DataContext="{d:DesignInstance Type=local:MainWindowModel}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow"
+        Height="450"
+        Width="800">
 
     <Window.DataContext>
         <local:MainWindowModel />
     </Window.DataContext>
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
@@ -22,51 +24,101 @@
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Row="0"
+                    Grid.Column="0"
+                    Orientation="Vertical">
+
+            <Separator Opacity="0"
+                       Height="5" />
+
+            <KeyValue:KeyValue Key="Ф.И.О:"
+                               Value="{Binding FullName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+            <Separator Opacity="0"
+                       Height="10" />
+
+            <KeyValue:KeyValue Key="Дата рождения:"
+                               Value="{Binding BirthDateFull, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+        </StackPanel>
         
-        <KeyValue:KeyValue Grid.Row="0"
-                           Grid.Column="0"
-                           Key="Ф.И.О:" Value="{Binding FullName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
-        
-        <KeyValue:KeyValue Grid.Row="1"
-                           Grid.Column="0"
-                           Key="Дата рождения:"
-                           Value="{Binding BirthDateFull, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
-        
+
         <ListView Grid.Row="0"
-                  Grid.Column="1" ItemsSource="{Binding Path=Sugars}">
-            
+                  Grid.Column="1"
+                  ItemsSource="{Binding Path=SugarsView, UpdateSourceTrigger=PropertyChanged}">
+
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="№" DisplayMemberBinding="{Binding Path=Row}" />
-                    <GridViewColumn Header="Дата" DisplayMemberBinding="{Binding Path=DateOnly}" />
-                    <GridViewColumn Header="Время" DisplayMemberBinding="{Binding Path=TimeOnly}" />
-                    <GridViewColumn Header="Уровень" DisplayMemberBinding="{Binding Path=Level}" />
+                    <GridViewColumn Header="№" Width="25"
+                                    DisplayMemberBinding="{Binding Path=Row}" />
+                    
+                    <GridViewColumn Header="Дата" Width="80"
+                                    DisplayMemberBinding="{Binding Path=DateOnly}" />
+                    
+                    <GridViewColumn Header="Время" Width="50"
+                                    DisplayMemberBinding="{Binding Path=TimeOnly}" />
+                    
+                    <GridViewColumn Header="Уровень"
+                                    DisplayMemberBinding="{Binding Path=Level}" />
+                    
                 </GridView>
             </ListView.View>
         </ListView>
+
+        <DateStartEnd:DateStartEndView Grid.Row="1"
+                                       Grid.Column="0"
+                                       DataContext="{Binding DateStartEndViewModel}" />
 
         <TabControl Grid.Row="1"
                     Grid.Column="1">
 
             <TabItem Header="Дата">
-                <Calendar  />
+                <Calendar />
             </TabItem>
+            
             <TabItem Header="Время">
-                <ListView ItemsSource="{Binding Times}">
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn DisplayMemberBinding="{Binding}" />
-                        </GridView>
-                    </ListView.View>
-                </ListView>
+                <StackPanel Orientation="Vertical">
+                    <Separator Opacity="0"
+                               Height="5" />
+                    <ListView Style="{StaticResource ListViewHorizontal}"
+                              ItemsSource="{Binding Times1}" />
+                    <Separator Opacity="0"
+                               Height="10" />
+                    <ListView Style="{StaticResource ListViewHorizontal}"
+                              ItemsSource="{Binding Times2}" />
+                </StackPanel>
             </TabItem>
+            
             <TabItem Header="Уровень">
                 <StackPanel Orientation="Vertical">
-                    <TextBlock Text="Целое число" HorizontalAlignment="Center" />
-                    <ListView Style="{StaticResource ListViewHorizontal}" ItemsSource="{Binding Decimals}" />
-                    <TextBlock Text="Десятичная часть" HorizontalAlignment="Center"/>
-                    <ListView Style="{StaticResource ListViewHorizontal}" ItemsSource="{Binding Fractions}" />
-                    <Button Content="Следующий ряд" HorizontalAlignment="Center"/>
+                    <Separator Opacity="0"
+                               Height="5" />
+                    
+                    <TextBlock Text="Целое число"
+                               HorizontalAlignment="Center" />
+                    
+                    <Separator Opacity="0"
+                               Height="5" />
+                    
+                    <ListView Style="{StaticResource ListViewHorizontal}"
+                              ItemsSource="{Binding Decimals}" />
+                    
+                    <Separator Opacity="0"
+                               Height="10" />
+                    
+                    <TextBlock Text="Десятичная часть"
+                               HorizontalAlignment="Center" />
+                    
+                    <Separator Opacity="0"
+                               Height="5" />
+                    
+                    <ListView Style="{StaticResource ListViewHorizontal}"
+                              ItemsSource="{Binding Fractions}" />
+                    
+                    <Button Content="Следующий ряд"
+                            HorizontalAlignment="Center" />
+                    
                 </StackPanel>
 
             </TabItem>
