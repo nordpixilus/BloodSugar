@@ -22,7 +22,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\NetDayHospital.Core\ClipoardPerson\ClipoardPerson.csproj" />
     <ProjectReference Include="..\..\NetDayHospital.Core\NetDayHospital.Core\NetDayHospital.Core.csproj" />
-    <ProjectReference Include="..\..\Nordpixilus.CCL\Nordpixilus.CCL\Nordpixilus.CCL.csproj" />
   </ItemGroup>
 
   <ItemGroup>
