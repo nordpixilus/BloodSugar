@@ -3,8 +3,8 @@ using ClipoardPerson;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using NetDayHospital.Core.Controls.DateStartEnd;
+using NetDayHospital.Core.Controls.DateStartEnd.Messages;
 using NetDayHospital.Core.Controls.ListBloodSugar;
-using NetDayHospital.Core.Messages;
 using NetDayHospital.Core.Models;
 using NetDayHospital.Core.Models.Table.System;
 using System;
@@ -159,7 +159,10 @@ internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateS
     public void Receive(ComplectDateStartEndMessege message)
     {
 
-        //ListSugar.Update(DateStartEndViewModel.DateStart!.Value, end: DateStartEndViewModel.DateEnd!.Value);
+        ListSugar.Update(
+            start: DateStartEndViewModel.SelectedDateStart!.Value,
+            end: DateStartEndViewModel.SelectedDateEnd!.Value
+            );
 
 
         //List<string> times = InitTimes();
