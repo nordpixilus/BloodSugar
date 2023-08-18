@@ -8,49 +8,117 @@
         xmlns:DateStartEnd="clr-namespace:NetDayHospital.Core.Controls.DateStartEnd;assembly=NetDayHospital.Core"
         xmlns:KeyValue="clr-namespace:Nordpixilus.CCL.KeyValue;assembly=Nordpixilus.CCL"
         mc:Ignorable="d"
+        FontSize="14"
         Title="MainWindow"
-        Height="450"
+        Height="580"
         Width="800">
 
     <Window.DataContext>
         <local:MainWindowModel />
     </Window.DataContext>
 
-    <Grid>
+    <Window.Resources>
+        <Style x:Key="TextBoxError"
+               TargetType="TextBox">
+            <Setter Property="Margin"
+                    Value="0, 0, 35, 0" />
+            
+            <Setter Property="Validation.ErrorTemplate">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <DockPanel LastChildFill="true">
+
+                            <Border Background="red"
+                                    DockPanel.Dock="right"
+                                    Margin="5,0,0,0"
+                                    Width="20"
+                                    Height="20"
+                                    CornerRadius="10"
+                                    ToolTip="{Binding ElementName=customAdorner,
+                        Path=AdornedElement.(Validation.Errors)[0].ErrorContent,
+                        UpdateSourceTrigger=PropertyChanged}">
+
+                                <TextBlock Text="?"
+                                           VerticalAlignment="center"
+                                           HorizontalAlignment="center"
+                                           FontWeight="Bold"
+                                           Foreground="white" />
+
+                            </Border>
+                            <AdornedElementPlaceholder Name="customAdorner" />
+
+                        </DockPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition />
+            <ColumnDefinition MinWidth="400" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Row="0"
+        <StackPanel Grid.RowSpan="2"
                     Grid.Column="0"
                     Orientation="Vertical">
 
-            <Separator Opacity="0"
-                       Height="5" />
+            
 
-            <KeyValue:KeyValue Key="Ф.И.О:"
-                               Value="{Binding FullName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0"
+                           Margin="15, 0, 5, 0"
+                           Text="Ф.И.О:" />
+
+                <TextBox Grid.Column="1"
+                         Style="{StaticResource TextBoxError}"
+                         Text="{Binding FullName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+            </Grid>
 
             <Separator Opacity="0"
                        Height="10" />
 
-            <KeyValue:KeyValue Key="Дата рождения:"
-                               Value="{Binding BirthDateFull, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0"
+                           Margin="15, 0, 5, 0"
+                           Text="Дата рождения:" />
+
+                <TextBox Grid.Column="1"
+                         Style="{StaticResource TextBoxError}"
+                         Width="150"
+                         Text="{Binding BirthDateFull, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                         Margin="0,0,125,0" />
+            </Grid>
+
+            <Separator Opacity="0"
+                       Height="10" />
+
+            <DateStartEnd:DateStartEndView DataContext="{Binding DateStartEndViewModel}" />
 
         </StackPanel>
 
         <ListBloodSugar:ListBloodSugarView Grid.RowSpan="2"
-                                           Grid.Column="2"
+                                           Grid.Column="2" Margin="10,0,10,0"
                                            DataContext="{Binding Path=ListSugar}" />
 
-        <DateStartEnd:DateStartEndView Grid.Row="1"
+        <!--<DateStartEnd:DateStartEndView Grid.Row="1"
                                        Grid.Column="0"
-                                       DataContext="{Binding DateStartEndViewModel}" />
+                                       DataContext="{Binding DateStartEndViewModel}" />-->
 
     </Grid>
 

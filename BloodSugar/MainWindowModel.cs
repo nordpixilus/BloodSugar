@@ -159,7 +159,7 @@ internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateS
     public void Receive(ComplectDateStartEndMessege message)
     {
 
-        ListSugar.Update(DateStartEndViewModel.DateStart!.Value, end: DateStartEndViewModel.DateEnd!.Value);
+        //ListSugar.Update(DateStartEndViewModel.DateStart!.Value, end: DateStartEndViewModel.DateEnd!.Value);
 
 
         //List<string> times = InitTimes();
