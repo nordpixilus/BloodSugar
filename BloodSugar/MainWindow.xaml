@@ -6,7 +6,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BloodSugar"
         xmlns:DateStartEnd="clr-namespace:NetDayHospital.Core.Controls.DateStartEnd;assembly=NetDayHospital.Core"
-        xmlns:KeyValue="clr-namespace:Nordpixilus.CCL.KeyValue;assembly=Nordpixilus.CCL"
         mc:Ignorable="d"
         FontSize="14"
         Title="MainWindow"
