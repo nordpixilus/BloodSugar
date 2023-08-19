@@ -26,8 +26,8 @@
 
   <ItemGroup>
     <Folder Include="Controls\" />
-    <Folder Include="Documents\" />
     <Folder Include="Messeges\" />
+    <Folder Include="Temp\" />
   </ItemGroup>
 
 </Project>
