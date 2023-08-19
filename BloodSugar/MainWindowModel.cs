@@ -1,6 +1,8 @@
-﻿using BloodSugar.Models;
+﻿using BloodSugar.Documents;
+using BloodSugar.Models;
 using ClipoardPerson;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using NetDayHospital.Core.Controls.DateStartEnd;
 using NetDayHospital.Core.Controls.DateStartEnd.Messages;
@@ -8,10 +10,13 @@ using NetDayHospital.Core.Controls.ListBloodSugar;
 using NetDayHospital.Core.Models;
 using NetDayHospital.Core.Models.Table.System;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Windows.Documents;
+using System.Windows.Media;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace BloodSugar;
 
@@ -24,10 +29,7 @@ internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateS
 
         FullName = string.Empty;
         BirthDateFull = string.Empty;
-        getClipoardPerson = new GetClipoardPerson();
-        InitDecimal();
-        //InitSugars();
-        InitFractions();
+        getClipoardPerson = new GetClipoardPerson();        
         StartMonitorGetRecordsAsync();
     }
 
@@ -37,40 +39,6 @@ internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateS
 
     [ObservableProperty]
     private ListBloodSugarViewModel _ListSugar;
-
-    [ObservableProperty]
-    private List<Item> _Fractions = new();
-
-    private void InitFractions()
-    {
-        for (int i = 0; i < 10; i++)
-        {
-            Fractions.Add(new Item { Name = i.ToString() });
-        }
-    }
-
-    [ObservableProperty]
-    private List<Item> _Decimals = new();
-
-    private void InitDecimal()
-    {
-        for (int i = 3; i < 9; i++)
-        {
-            Decimals.Add(new Item { Name = i.ToString() });
-        }
-    }
-
-
-
-    //public List<Item> Times2 { get; set; } = new();
-
-    private List<string> InitTimes()
-    {
-        string[] times = { "15.00", "17.00", "19.00", "21.00", "15.00", "20.00", "07.00",
-                "15.00", "20.00", "07.00", "15.00" };
-
-        return times.ToList();
-    }
 
     private static List<Parser> InitParsers()
     {
@@ -138,23 +106,34 @@ internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateS
 
     #endregion
 
-    //[ObservableProperty]
-    //private ObservableCollection<Sugar> _SugarsCol;
 
-    //[ObservableProperty]
-    //public ICollectionView _SugarsView;
+    [RelayCommand]
+    private void Print()
+    {
+        Person person = new()
+        {
+            FullName = FullName,
+            BirthDateFull = BirthDateFull,
+            Sugars = ListSugar.SugarsCol.ToList()
+        };
 
-    //[ObservableProperty]
-    //private List<Sugar> _Sugars = new();
+        // Create a PrintDialog  
+        PrintDialog printDlg = new PrintDialog();
+        // Create a FlowDocument dynamically.  
+        FlowDocument doc = new SugarDocument(person);
+        doc.Name = "FlowDoc";
+        // Create IDocumentPaginatorSource from FlowDocument  
+        IDocumentPaginatorSource idpSource = doc;
+        // Call PrintDocument method to send document to printer  
+        //printDlg.PrintDocument(idpSource.DocumentPaginator, "Hello WPF Printing.");
 
-    //internal void InitSugars()
-    //{
-    //    for (int i = 1; i < 12; i++)
-    //    {
-    //        Sugars.Add(new Sugar { Row = i.ToString() });
-    //    }
+        if (printDlg.ShowDialog() ?? false)
+        {
+            printDlg.PrintDocument(idpSource.DocumentPaginator, "Hello WPF Printing.");
+        }        
+    }
 
-    //}
+    
 
     public void Receive(ComplectDateStartEndMessege message)
     {
@@ -163,32 +142,5 @@ internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateS
             start: DateStartEndViewModel.SelectedDateStart!.Value,
             end: DateStartEndViewModel.SelectedDateEnd!.Value
             );
-
-
-        //List<string> times = InitTimes();
-        //List<string> dates = StringHelper
-        //    .CreateDiabetDates(
-        //     start: DateStartEndViewModel.DateStart!.Value,
-        //     end: DateStartEndViewModel.DateEnd!.Value
-        //     );
-
-
-        //for (int i = 1; i < 12; i++)
-        //{
-        //    Sugars.Add(new Sugar { Row = i.ToString(), DateOnly = dates[i-1], TimeOnly = times[i-1] });
-        //}
-
-        //SugarsCol = new(Sugars);
-
-        //SugarsView = CollectionViewSource.GetDefaultView(SugarsCol);
-
-        //PeopleCol = new(this.personService.Persons);
-
-        //InitSugars();
-        //for (int i = 1; i < 11; i++)
-        //{
-        //    Sugars.Add(new Sugar { Row = i.ToString(), DateOnly = dates[i-1], TimeOnly = times[i-1] });
-        //}
     }
-
 }
