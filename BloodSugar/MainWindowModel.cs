@@ -9,14 +9,11 @@ using NetDayHospital.Core.Controls.DateStartEnd.Messages;
 using NetDayHospital.Core.Controls.ListBloodSugar;
 using NetDayHospital.Core.Models;
 using NetDayHospital.Core.Models.Table.System;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Windows.Documents;
-using System.Windows.Media;
-using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 
 namespace BloodSugar;
 

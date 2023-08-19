@@ -1,4 +1,5 @@
 ﻿using BloodSugar.Models;
+using NetDayHospital.Core.Documents;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
