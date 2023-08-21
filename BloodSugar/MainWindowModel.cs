@@ -119,8 +119,9 @@ internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateS
         // Create a PrintDialog  
         PrintDialog printDlg = new PrintDialog();
         // Create a FlowDocument dynamically.  
-        FlowDocument doc = new SugarDocument(person);
-        doc.Name = "FlowDoc";
+        SugarDocument doc = new(person);
+        doc.Create();
+        //doc.Name = "FlowDoc";
         // Create IDocumentPaginatorSource from FlowDocument  
         IDocumentPaginatorSource idpSource = doc;
         // Call PrintDocument method to send document to printer  
