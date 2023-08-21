@@ -1,10 +1,15 @@
 ﻿using BloodSugar.Models;
+using NetDayHospital.Core.Controls.ListBloodSugar;
 using NetDayHospital.Core.Documents;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Media;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace BloodSugar.Documents
 {
@@ -12,145 +17,147 @@ namespace BloodSugar.Documents
     {
         private Person person;
 
-        //public static FlowDocument Create(Person person)
-        //{
-        //    //Directory.CreateDirectory("Temp");
-        //    //FileInfo fileInf = new FileInfo(@"Temp\demo.pdf");
-
-        //    // Create a FlowDocument  
-        //    FlowDocument doc = new FlowDocument();
-        //    // Create a Section  
-        //    Section sec = new Section();
-        //    // Create first Paragraph  
-        //    Paragraph p1 = new Paragraph();
-
-
-        //    // Create and add a new Bold, Italic and Underline  
-        //    Bold bld = new Bold();
-        //    bld.Inlines.Add(new Run("First Paragraph"));
-        //    Italic italicBld = new Italic();
-        //    italicBld.Inlines.Add(bld);
-        //    Underline underlineItalicBld = new Underline();
-        //    underlineItalicBld.Inlines.Add(italicBld);
-        //    // Add Bold, Italic, Underline to Paragraph  
-        //    p1.Inlines.Add(underlineItalicBld);
-        //    // Add Paragraph to Section  
-        //    sec.Blocks.Add(p1);
-        //    // Add Section to FlowDocument  
-        //    doc.Blocks.Add(sec);
-        //    return doc;
-
-
-
-        //}
-       
-
         public SugarDocument(Person person)
         {
             this.person = person;
-            CreateFlowDocument();
+            AddText();
+            AddTable();            
         }
 
-        private void CreateFlowDocument()
+        private void AddText()
         {
-            // Create a FlowDocument  
-            //FlowDocument doc = new BaseDocument();
-            //doc.ColumnWidth = double.PositiveInfinity;
-            //doc.Blocks.Add(new Block());
-            //doc.TextAlignment = TextAlignment.Center;
+            Paragraph paragraphPerson = new();
+            paragraphPerson.TextAlignment = TextAlignment.Center;
+            paragraphPerson.FontWeight = FontWeights.Bold;
 
-            Paragraph pFio = TextParagraphBold("Фатеева Юлия Николаевна, дата рождения: 30.07.1960 (63 года)");
-            Section s1 = SectionEnterParagraph(1);
-            Paragraph pDoc = TextParagraphBold("Колебания сахара крови");
+            paragraphPerson.Inlines.Add(new LineBreak());
+            paragraphPerson.Inlines.Add(new Run($"{person.FullName}, дата рождения: {person.BirthDateFull}"));
+            paragraphPerson.Inlines.Add(new LineBreak());
+            paragraphPerson.Inlines.Add(new LineBreak());
 
-            Blocks.Add(pFio);
-            Blocks.Add(s1);
-            Blocks.Add(pDoc);
+            Blocks.Add(paragraphPerson);
 
-            //this.Blocks
+            Blocks.Add(new Paragraph());
 
-
-            //// Create a Section  
-            //Section sec = new Section();
-            //// Create first Paragraph  
-            //Paragraph p1 = new Paragraph();
-            //// Create and add a new Bold, Italic and Underline  
-            //Bold bld = new Bold();
-            //bld.Inlines.Add(new Run("First Paragraph"));
-            //Italic italicBld = new Italic();
-            //italicBld.Inlines.Add(bld);
-            //Underline underlineItalicBld = new Underline();
-            //underlineItalicBld.Inlines.Add(italicBld);
-            //// Add Bold, Italic, Underline to Paragraph  
-            //p1.Inlines.Add(underlineItalicBld);
-            //// Add Paragraph to Section  
-            //sec.Blocks.Add(p1);
-            //// Add Section to FlowDocument  
-            //doc.Blocks.Add(sec);
-
-
-
-
-            //return doc;
+            Paragraph paragraphTableName = new();
+            paragraphTableName.Inlines.Add(new Run(@"Уровень сахара крови."));
+            paragraphTableName.Inlines.Add(new LineBreak());
+            paragraphTableName.TextAlignment = TextAlignment.Center;
+            paragraphTableName.FontWeight = FontWeights.Bold;
+            Blocks.Add(paragraphTableName);
         }
 
-        private Section SectionEnterParagraph(int num = 1)
+        private void AddTable()
         {
-            Section sec = new Section();
-            for (int i = 0; i < num; i++)
+            Table table = new()
             {
-                Paragraph p = new();
-                sec.Blocks.Add(p);
+                FontSize = 19,
+                FontFamily = new FontFamily("Times New Roman"),
+                Background = Brushes.Black, CellSpacing = 2,
+            };
+
+            TableColumn column1 = new();
+            TableColumn column2 = new();
+
+            table.Columns.Add(column1);
+            table.Columns.Add(column2);
+
+            TableRow row = new();
+            row.Cells.Add(CellHeader("Дата, время"));
+            row.Cells.Add(CellHeader(@"Уровень сахара крови (ммоль\л)"));
+            TableRowGroup RowGroupHeader = new();
+            RowGroupHeader.Rows.Add(row);
+            table.RowGroups.Add(RowGroupHeader);
+
+            row = new();
+            row.Cells.Add(CellContent(person.Sugars, "left"));
+            row.Cells.Add(CellContent(person.Sugars, "riht"));
+            TableRowGroup RowGroupContent = new();
+            RowGroupContent.Rows.Add(row);
+            table.RowGroups.Add(RowGroupContent);
+
+            Blocks.Add(table);
+
+            
+        }
+
+        private TableCell CellHeader(string text)
+        {
+            TableCell tableCell = new()
+            {
+                Background = Brushes.White,
+                TextAlignment = TextAlignment.Center,
+                Padding = new Thickness(0, 0, 0, 15)
+            };
+
+            //tableCell.Blocks.Add(new LineBreak());
+
+            Paragraph paragraph = new();
+
+            paragraph.Inlines.Add(new LineBreak());
+            //paragraph = new(new Run(text));
+            paragraph.Inlines.Add(new Run(text));
+            //paragraph.Inlines.Add(new Run("\n"));
+            //paragraph.MinWidowLines = 30;
+            //Padding = new Thickness(0,10,0,10)
+
+            tableCell.Blocks.Add(paragraph);
+            return tableCell;
+        }
+
+        private TableCell CellContent(List<Sugar> sugars, string column)
+        {
+            TableCell tableCell = new()
+            {
+                Background = Brushes.White,
+                TextAlignment = TextAlignment.Center
+            };
+
+            Paragraph paragraph = new();
+
+            paragraph.Inlines.Add(new LineBreak());
+
+            //tableCell.Blocks.Add(paragraph);
+            //tableCell.Blocks.Add(new Paragraph());
+            if (column == "left")
+            {
+                foreach (var item in sugars)
+                {
+                    //Paragraph paragraph = new();
+                    //paragraph.Inlines.Add(new LineBreak());
+                    paragraph.Inlines.Add(new Run($"{item.DateOnly} {item.TimeOnly}\r\n"));
+                    paragraph.LineHeight = 30;
+                    tableCell.Blocks.Add(paragraph);
+                    //tableCell.Blocks.Add(new Paragraph(new Run($"{item.DateOnly} {item.TimeOnly}")));
+                }                
+            }
+            else
+            {
+                foreach (var item in sugars)
+                {
+                    //Paragraph paragraph = new();
+                    //paragraph.Inlines.Add(new LineBreak());
+                    paragraph.Inlines.Add(new Run($"{item.Level}\r\n"));
+                    tableCell.Blocks.Add(paragraph);
+                    //tableCell.Blocks.Add(new Paragraph(new Run(item.Level)));
+                }
             }
 
-            return sec;
-        }
+            tableCell.Blocks.Add(paragraph);
 
-        private Paragraph TextParagraphBold(string text)
+            tableCell.Blocks.Add(new Paragraph());
+            tableCell.Blocks.Add(new Paragraph());
+
+            return tableCell;
+        }
+        
+        private static Paragraph TextParagraphCenter(string text)
         {
-            Bold bld = new();
-            Run run = new Run();
-            bld.Inlines.Add(new Run(text));
-            //Underline underlineItalicBld = new();
-            //underlineItalicBld.Inlines.Add(bld);
-            Paragraph p = new();
-            //TextAlignment textAlignment = new TextAlignment();
-
-            p.TextAlignment = TextAlignment.Center;
-            p.Inlines.Add(bld);
-            return p;
-        }
-
-        private static TableColumn CreateItemColumnSize(int size)
-        {
-            return new TableColumn() { Width = new GridLength(size) };
-        }
-
-        private void CreateDocument2()
-        {
-            FlowDocument doc = new FlowDocument();
-
-            Paragraph p = new Paragraph(new Run("Hello, world!"));
-            p.FontSize = 36;
-            doc.Blocks.Add(p);
-
-            p = new Paragraph(new Run("The ultimate programming greeting!"));
-            p.FontSize = 14;
-            p.FontStyle = FontStyles.Italic;
-            p.TextAlignment = TextAlignment.Left;
-            p.Foreground = Brushes.Gray;
-            doc.Blocks.Add(p);
-
-            PrintDialog pd = new PrintDialog();
-            doc.PageHeight = pd.PrintableAreaHeight;
-            doc.PageWidth = pd.PrintableAreaWidth;
-            doc.PagePadding = new Thickness(50);
-            doc.ColumnGap = 0;
-            doc.ColumnWidth = pd.PrintableAreaWidth;
-
-            IDocumentPaginatorSource dps = doc;
-            pd.PrintDocument(dps.DocumentPaginator, "flow doc");
-        }
+            return new Paragraph(new Run(text))
+            {
+                TextAlignment = TextAlignment.Center
+            };
+        }             
     }
 }
 

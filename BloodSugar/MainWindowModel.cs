@@ -28,6 +28,8 @@ internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateS
         BirthDateFull = string.Empty;
         getClipoardPerson = new GetClipoardPerson();        
         StartMonitorGetRecordsAsync();
+        FullName = "Фатеева Юлия Николаевна";
+        BirthDateFull = "30.07.1960 (63 года)";
     }
 
     [ObservableProperty]
