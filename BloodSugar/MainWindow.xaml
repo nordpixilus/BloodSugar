@@ -111,17 +111,12 @@
             <Button Content="Печать"
                     Command="{Binding PrintCommand}" />
 
-            <!--<Button Content="Печать" Click="Button_Click_print" />-->
-
         </StackPanel>
 
         <ListBloodSugar:ListBloodSugarView Grid.RowSpan="2"
-                                           Grid.Column="2" Margin="10,0,10,0"
+                                           Grid.Column="2"
+                                           Margin="10,0,10,0"
                                            DataContext="{Binding Path=ListSugar}" />
-
-        <!--<DateStartEnd:DateStartEndView Grid.Row="1"
-                                       Grid.Column="0"
-                                       DataContext="{Binding DateStartEndViewModel}" />-->
 
     </Grid>
 
