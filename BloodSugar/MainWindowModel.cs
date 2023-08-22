@@ -17,7 +17,7 @@ using System.Windows.Documents;
 
 namespace BloodSugar;
 
-internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateStartEndMessege>
+internal partial class MainWindowModel : BaseViewModel,  IRecipient<ComplectDateStartEndMessege>
 {
     public MainWindowModel()
     {
