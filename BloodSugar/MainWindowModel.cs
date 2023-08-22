@@ -17,7 +17,7 @@ using System.Windows.Documents;
 
 namespace BloodSugar;
 
-internal partial class MainWindowModel : BaseViewModel,  IRecipient<ComplectDateStartEndMessege>
+internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateStartEndMessege>
 {
     public MainWindowModel()
     {
@@ -26,7 +26,7 @@ internal partial class MainWindowModel : BaseViewModel,  IRecipient<ComplectDate
 
         FullName = string.Empty;
         BirthDateFull = string.Empty;
-        getClipoardPerson = new GetClipoardPerson();        
+        getClipoardPerson = new GetClipoardPerson();
         StartMonitorGetRecordsAsync();
         FullName = "Фатеева Юлия Николаевна";
         BirthDateFull = "30.07.1960 (63 года)";
@@ -130,10 +130,10 @@ internal partial class MainWindowModel : BaseViewModel,  IRecipient<ComplectDate
         if (printDlg.ShowDialog() ?? false)
         {
             printDlg.PrintDocument(idpSource.DocumentPaginator, "Hello WPF Printing.");
-        }        
+        }
     }
 
-    
+
 
     public void Receive(ComplectDateStartEndMessege message)
     {
