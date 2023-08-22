@@ -14,14 +14,14 @@ public class SugarDocument : BaseDocument
 
     public SugarDocument(Person person)
     {
-        this.person = person;                       
+        this.person = person;
     }
 
     public void Create()
     {
-        AddText();            
-        AddTable();            
-    }       
+        AddText();
+        AddTable();
+    }
 
     private void AddText()
     {
