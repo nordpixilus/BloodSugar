@@ -19,14 +19,17 @@ namespace BloodSugar;
 
 internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateStartEndMessege>
 {
+    private readonly GetClipoardPerson getClipoardPerson;
+
     public MainWindowModel()
     {
+        getClipoardPerson = new GetClipoardPerson();
         ListSugar = new ListBloodSugarViewModel();
         WeakReferenceMessenger.Default.RegisterAll(this);
 
         FullName = string.Empty;
         BirthDateFull = string.Empty;
-        getClipoardPerson = new GetClipoardPerson();
+        
         StartMonitorGetRecordsAsync();
         FullName = "Фатеева Юлия Николаевна";
         BirthDateFull = "30.07.1960 (63 года)";
@@ -50,7 +53,7 @@ internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateS
         return parsers;
     }
 
-    GetClipoardPerson getClipoardPerson;
+    
 
     //List<Parser> parsers;
 
