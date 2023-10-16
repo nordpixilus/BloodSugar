@@ -19,43 +19,54 @@ namespace BloodSugar;
 
 internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateStartEndMessege>
 {
-    private readonly GetClipoardPerson getClipoardPerson;
-
     public MainWindowModel()
     {
-        getClipoardPerson = new GetClipoardPerson();
-        ListSugar = new ListBloodSugarViewModel();
         WeakReferenceMessenger.Default.RegisterAll(this);
-
-        FullName = string.Empty;
-        BirthDateFull = string.Empty;
-        
         StartMonitorGetRecordsAsync();
+
         FullName = "Фатеева Юлия Николаевна";
         BirthDateFull = "30.07.1960 (63 года)";
     }
 
+
+    #region Подключение работы с буфером обмена.
+    private readonly GetClipoardPerson getClipoardPerson = new();
+    #endregion
+
+    #region Подключение блока выбора дат.
     [ObservableProperty]
     DateStartEndViewModel _DateStartEndViewModel = new();
+    #endregion
 
-
+    #region Подключение блока таблицы дат и количесво сахара в крови.
     [ObservableProperty]
-    private ListBloodSugarViewModel _ListSugar;
+    private ListBloodSugarViewModel _ListBloodSugarViewModel = new(); 
+    #endregion
 
-    private static List<Parser> InitParsers()
-    {
-        List<Parser> parsers = new()
-            {
-                new Parser { Key = "FullName", Pattern = @"^(?<FullName>([а-яА-Я]+ ?){2,5}),? (Д|д)ата", Level = 3 },
-                new Parser { Key = "BirthDateFull", Pattern = @"^.+рождения(:|,|\.|;)?\s?(?<BirthDateFull>.{18,20})(:|,|\.|;)?\s(П|п)ол", Level = 2 }
-            };
+    #region Поле FullName
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required]
+    [RegularExpression(@"^([А-Я][а-я]+ ?){2,5}", ErrorMessage = "Invalid Social Security Number.")]
+    private string _FullName = string.Empty;
 
-        return parsers;
-    }
+    //partial void OnFullNameChanged(string value)
+    //{
+    //    person.FullName = value;
+    //}
+    #endregion
 
-    
+    #region Поле BirthDateFull Дата рождения и возраст
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required]
+    private string _BirthDateFull = string.Empty;
 
-    //List<Parser> parsers;
+    //partial void OnBirthDateFullChanged(string value)
+    //{
+    //    person.BirthDateFull = value;
+    //}
+    #endregion
 
     /// <summary>
     /// Ожидание получения данных.
@@ -77,37 +88,16 @@ internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateS
         }
     }
 
-    //private Person person;
+    private static List<Parser> InitParsers()
+    {
+        List<Parser> parsers = new()
+            {
+                new Parser { Key = "FullName", Pattern = @"^(?<FullName>([а-яА-Я]+ ?){2,5}),? (Д|д)ата", Level = 3 },
+                new Parser { Key = "BirthDateFull", Pattern = @"^.+рождения(:|,|\.|;)?\s?(?<BirthDateFull>.{18,20})(:|,|\.|;)?\s(П|п)ол", Level = 2 }
+            };
 
-    #region Поле FullName
-
-    [ObservableProperty]
-    [NotifyDataErrorInfo]
-    [Required]
-    [RegularExpression(@"^([А-Я][а-я]+ ?){2,5}", ErrorMessage = "Invalid Social Security Number.")]
-    private string _FullName;
-
-    //partial void OnFullNameChanged(string value)
-    //{
-    //    person.FullName = value;
-    //}
-
-    #endregion
-
-    #region Поле BirthDateFull Дата рождения и возраст    
-
-    [ObservableProperty]
-    [NotifyDataErrorInfo]
-    [Required]
-    private string _BirthDateFull;
-
-    //partial void OnBirthDateFullChanged(string value)
-    //{
-    //    person.BirthDateFull = value;
-    //}
-
-    #endregion
-
+        return parsers;
+    }
 
     [RelayCommand]
     private void Print()
@@ -116,7 +106,7 @@ internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateS
         {
             FullName = FullName,
             BirthDateFull = BirthDateFull,
-            Sugars = ListSugar.SugarsCol.ToList()
+            Sugars = ListBloodSugarViewModel.SugarsCol.ToList()
         };
 
         // Create a PrintDialog  
@@ -141,7 +131,7 @@ internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateS
     public void Receive(ComplectDateStartEndMessege message)
     {
 
-        ListSugar.Update(
+        ListBloodSugarViewModel.Update(
             start: DateStartEndViewModel.SelectedDateStart!.Value,
             end: DateStartEndViewModel.SelectedDateEnd!.Value
             );
