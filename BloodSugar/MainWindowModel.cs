@@ -24,12 +24,12 @@ internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateS
         WeakReferenceMessenger.Default.RegisterAll(this);
         StartMonitorGetRecordsAsync();
 
-        FullName = "Фатеева Юлия Николаевна";
-        BirthDateFull = "30.07.1960 (63 года)";
+        //FullName = "Фатеева Юлия Николаевна";
+        //BirthDateFull = "30.07.1960 (63 года)";
     }
 
-
     #region Подключение работы с буфером обмена.
+
     private readonly GetClipoardPerson getClipoardPerson = new();
     #endregion
 
@@ -39,6 +39,7 @@ internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateS
     #endregion
 
     #region Подключение блока таблицы дат и количесво сахара в крови.
+
     [ObservableProperty]
     private ListBloodSugarViewModel _ListBloodSugarViewModel = new(); 
     #endregion
@@ -68,8 +69,10 @@ internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateS
     //}
     #endregion
 
+    #region Start
+
     /// <summary>
-    /// Ожидание получения данных.
+    /// Ожидание получения данных из буфера обмена.
     /// </summary>
     private async void StartMonitorGetRecordsAsync()
     {
@@ -88,6 +91,10 @@ internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateS
         }
     }
 
+    /// <summary>
+    /// Создание списка регулярок.
+    /// </summary>
+    /// <returns></returns>
     private static List<Parser> InitParsers()
     {
         List<Parser> parsers = new()
@@ -97,7 +104,8 @@ internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateS
             };
 
         return parsers;
-    }
+    } 
+    #endregion
 
     [RelayCommand]
     private void Print()
@@ -133,7 +141,8 @@ internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateS
 
         ListBloodSugarViewModel.Update(
             start: DateStartEndViewModel.SelectedDateStart!.Value,
-            end: DateStartEndViewModel.SelectedDateEnd!.Value
+            end: DateStartEndViewModel.SelectedDateEnd!.Value,
+            rows: 5
             );
     }
 }
