@@ -111,6 +111,41 @@
             <Button Content="Печать"
                     Command="{Binding PrintCommand}" />
 
+            <TextBlock Text="Значения сахара" HorizontalAlignment="Center" />
+
+            <Separator Opacity="0"
+                       Height="10" />
+
+            <StackPanel Orientation="Horizontal">
+
+                <RadioButton GroupName="Sugar"
+                             VerticalAlignment="Top"
+                             Content="Очень высокое"
+                             IsChecked="{Binding Path=RadioButton1, Mode=TwoWay}" />
+
+                <Separator Opacity="0"
+                           Width="10" />
+
+                <RadioButton GroupName="Sugar"
+                             VerticalAlignment="Center"
+                             Content="Высокое"
+                             IsChecked="{Binding Path=RadioButton2, Mode=TwoWay}" />
+
+                <Separator Opacity="0"
+                           Width="10" />
+
+                <RadioButton GroupName="Sugar"
+                             VerticalAlignment="Center"
+                             Content="Нормальное"
+                             IsChecked="{Binding Path=RadioButton3, Mode=TwoWay}" />
+
+            </StackPanel>
+
+            
+
+            
+            
+
         </StackPanel>
 
         <ListBloodSugar:ListBloodSugarView Grid.RowSpan="2"
