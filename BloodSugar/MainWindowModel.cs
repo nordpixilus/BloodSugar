@@ -8,10 +8,13 @@ using NetDayHospital.Core.Controls.DateStartEnd;
 using NetDayHospital.Core.Controls.DateStartEnd.Messages;
 using NetDayHospital.Core.Controls.ListBloodSugar;
 using NetDayHospital.Core.Models;
+using NetDayHospital.Core.Models.Table.Hospital;
 using NetDayHospital.Core.Models.Table.System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Reflection.Emit;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 
@@ -19,11 +22,15 @@ namespace BloodSugar;
 
 internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateStartEndMessege>
 {
+    private bool updateTable = false;
+
     public MainWindowModel()
     {
-        WeakReferenceMessenger.Default.RegisterAll(this);
+        WeakReferenceMessenger.Default.RegisterAll(this);        
+        sugarRandom = new SugarRandom();
+        InitRadioButton(1);
         StartMonitorGetRecordsAsync();
-
+        
         //FullName = "Фатеева Юлия Николаевна";
         //BirthDateFull = "30.07.1960 (63 года)";
     }
@@ -41,10 +48,67 @@ internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateS
     #region Подключение блока таблицы дат и количесво сахара в крови.
 
     [ObservableProperty]
-    private ListBloodSugarViewModel _ListBloodSugarViewModel = new(); 
+    private ListBloodSugarViewModel _ListBloodSugarViewModel = new();
+    #endregion
+
+    #region Кнопки выбора вариантов сложности сахаров
+
+    [ObservableProperty]
+    private bool _RadioButton1 = false;
+
+    partial void OnRadioButton1Changed(bool value)
+    {
+        if (value is true)
+        {
+            CreateValueSugar(1);
+        }
+    }
+
+    [ObservableProperty]
+    private bool _RadioButton2 = false;
+
+    partial void OnRadioButton2Changed(bool value)
+    {
+        if (value is true)
+        {
+            CreateValueSugar(2);
+        }
+    }
+
+    [ObservableProperty]
+    private bool _RadioButton3 = false;
+
+    partial void OnRadioButton3Changed(bool value)
+    {
+        if (value is true)
+        {
+            CreateValueSugar(3);
+        }
+    }
+
+    private void InitRadioButton(int num)
+    {
+        switch (num)
+        {
+            case 1: RadioButton1 = true; break;
+            case 2: RadioButton2 = true; break;
+            case 3: RadioButton3 = true; break;
+        }
+    }
+
+    private SugarRandom sugarRandom;
+
+    private void CreateValueSugar(int level)
+    {
+        sugarRandom.FirstDay(level);
+        UpdateTable();
+    }
+
+
     #endregion
 
     #region Поле FullName
+
     [ObservableProperty]
     [NotifyDataErrorInfo]
     [Required]
@@ -58,10 +122,11 @@ internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateS
     #endregion
 
     #region Поле BirthDateFull Дата рождения и возраст
+
     [ObservableProperty]
     [NotifyDataErrorInfo]
     [Required]
-    private string _BirthDateFull = string.Empty;
+    private string _BirthDateFull = string.Empty;    
 
     //partial void OnBirthDateFullChanged(string value)
     //{
@@ -134,15 +199,24 @@ internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateS
         }
     }
 
+    private void UpdateTable()
+    {
+        if (updateTable)
+        {
+            ListBloodSugarViewModel.Update(
+            start: DateStartEndViewModel.SelectedDateStart!.Value,
+            end: DateStartEndViewModel.SelectedDateEnd!.Value,
+            rows: 0,
+            sugar: sugarRandom.GetPoints()
+            );
+        }
+    }
+
 
 
     public void Receive(ComplectDateStartEndMessege message)
     {
-
-        ListBloodSugarViewModel.Update(
-            start: DateStartEndViewModel.SelectedDateStart!.Value,
-            end: DateStartEndViewModel.SelectedDateEnd!.Value,
-            rows: 5
-            );
+        updateTable = message.Value;
+        UpdateTable();        
     }
 }
