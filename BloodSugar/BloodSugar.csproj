@@ -5,10 +5,12 @@
     <TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-    <SupportedOSPlatformVersion>8.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
     <UseWindowsForms>False</UseWindowsForms>
     <PlatformTarget>x64</PlatformTarget>
     <NeutralLanguage>ru-RU</NeutralLanguage>
+    <PackageIcon></PackageIcon>
+    <ApplicationIcon>unnamed.ico</ApplicationIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -18,6 +20,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DebugType>full</DebugType>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="unnamed.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\NetDayHospital.Core\ClipoardPerson\ClipoardPerson.csproj" />

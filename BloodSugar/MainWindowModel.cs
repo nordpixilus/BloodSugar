@@ -7,13 +7,13 @@ using CommunityToolkit.Mvvm.Messaging;
 using NetDayHospital.Core.Controls.DateStartEnd;
 using NetDayHospital.Core.Controls.DateStartEnd.Messages;
 using NetDayHospital.Core.Controls.ListBloodSugar;
+using NetDayHospital.Core.Helpers;
 using NetDayHospital.Core.Models;
-using NetDayHospital.Core.Models.Table.Hospital;
 using NetDayHospital.Core.Models.Table.System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Reflection.Emit;
+using System.Net;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -22,17 +22,20 @@ namespace BloodSugar;
 
 internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateStartEndMessege>
 {
+    private readonly SugarRandom sugarRandom;
     private bool updateTable = false;
+    private int selectDays;
 
     public MainWindowModel()
     {
-        WeakReferenceMessenger.Default.RegisterAll(this);        
+        WeakReferenceMessenger.Default.RegisterAll(this);
         sugarRandom = new SugarRandom();
         InitRadioButton(1);
+        selectDays = 7;
         StartMonitorGetRecordsAsync();
-        
-        //FullName = "Фатеева Юлия Николаевна";
-        //BirthDateFull = "30.07.1960 (63 года)";
+
+        FullName = "Фатеева Юлия Николаевна";
+        BirthDateFull = "30.07.1960 (63 года)";
     }
 
     #region Подключение работы с буфером обмена.
@@ -45,7 +48,7 @@ internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateS
     DateStartEndViewModel _DateStartEndViewModel = new();
     #endregion
 
-    #region Подключение блока таблицы дат и количесво сахара в крови.
+    #region Подключение блока таблицы.
 
     [ObservableProperty]
     private ListBloodSugarViewModel _ListBloodSugarViewModel = new();
@@ -86,6 +89,47 @@ internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateS
         }
     }
 
+    #endregion
+
+    #region Кнопка изменения варианта списка.
+
+    [ObservableProperty]
+    private bool _CountListChecked;
+
+    partial void OnCountListCheckedChanged(bool value)
+    {
+        if (value)
+        {
+            selectDays = 0;
+        }
+        else
+        {
+            selectDays = 7;
+        }
+
+        UpdateTable();
+    }
+    #endregion
+
+    #region Поле FullName
+
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required]
+    [RegularExpression(@"^([А-Я][а-я]+ ?){2,5}", ErrorMessage = "Только русские буквы. \n От 2 до 5 слов.")]
+    private string _FullName = string.Empty;
+    #endregion
+
+    #region Поле BirthDateFull Дата рождения и возраст
+
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required]
+    [RegularExpression(@"^\d\d\.\d\d\.\d\d\d\d \(\d\d ((Г|г)ода?|(Л|л)ет)\)",
+        ErrorMessage = "01.01.1960 (70 лет)\nВарианты:\nГод, Года, Лет\nгод, года, лет")]
+    private string _BirthDateFull = string.Empty;
+    #endregion
+
     private void InitRadioButton(int num)
     {
         switch (num)
@@ -96,43 +140,11 @@ internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateS
         }
     }
 
-    private SugarRandom sugarRandom;
-
     private void CreateValueSugar(int level)
     {
         sugarRandom.FirstDay(level);
         UpdateTable();
     }
-
-
-    #endregion
-
-    #region Поле FullName
-
-    [ObservableProperty]
-    [NotifyDataErrorInfo]
-    [Required]
-    [RegularExpression(@"^([А-Я][а-я]+ ?){2,5}", ErrorMessage = "Invalid Social Security Number.")]
-    private string _FullName = string.Empty;
-
-    //partial void OnFullNameChanged(string value)
-    //{
-    //    person.FullName = value;
-    //}
-    #endregion
-
-    #region Поле BirthDateFull Дата рождения и возраст
-
-    [ObservableProperty]
-    [NotifyDataErrorInfo]
-    [Required]
-    private string _BirthDateFull = string.Empty;    
-
-    //partial void OnBirthDateFullChanged(string value)
-    //{
-    //    person.BirthDateFull = value;
-    //}
-    #endregion
 
     #region Start
 
@@ -169,7 +181,7 @@ internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateS
             };
 
         return parsers;
-    } 
+    }
     #endregion
 
     [RelayCommand]
@@ -203,20 +215,18 @@ internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateS
     {
         if (updateTable)
         {
-            ListBloodSugarViewModel.Update(
+            ListBloodSugarViewModel.UpdateTable(
             start: DateStartEndViewModel.SelectedDateStart!.Value,
             end: DateStartEndViewModel.SelectedDateEnd!.Value,
-            rows: 0,
+            rows: selectDays,
             sugar: sugarRandom.GetPoints()
             );
         }
     }
 
-
-
     public void Receive(ComplectDateStartEndMessege message)
     {
         updateTable = message.Value;
-        UpdateTable();        
+        UpdateTable();
     }
 }
