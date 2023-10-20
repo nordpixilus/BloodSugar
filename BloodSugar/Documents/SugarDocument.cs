@@ -28,7 +28,8 @@ public class SugarDocument : BaseDocument
         Paragraph paragraphPerson = new()
         {
             TextAlignment = TextAlignment.Center,
-            FontWeight = FontWeights.Bold
+            FontWeight = FontWeights.Bold,
+            FontFamily = new FontFamily("Times New Roman")
         };
 
         paragraphPerson.Inlines.Add(new LineBreak());
@@ -39,10 +40,8 @@ public class SugarDocument : BaseDocument
 
         Blocks.Add(paragraphPerson);
 
-        Blocks.Add(new Paragraph());
-
         Paragraph paragraphTableName = new();
-        paragraphTableName.Inlines.Add(new Run(@"Уровень сахара крови  (ммоль\л)"));
+        paragraphTableName.Inlines.Add(new Run(@"Колебания сахара крови  (ммоль\л)"));
         paragraphTableName.Inlines.Add(new LineBreak());
         paragraphTableName.TextAlignment = TextAlignment.Center;
         paragraphTableName.FontWeight = FontWeights.Bold;

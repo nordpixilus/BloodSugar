@@ -9,8 +9,8 @@
         mc:Ignorable="d"
         FontSize="14"
         Title="MainWindow"
-        Height="590"
-        Width="800">
+        Height="550"
+        Width="900">
 
     <Window.DataContext>
         <local:MainWindowModel />
@@ -55,17 +55,16 @@
     </Window.Resources>
 
     <Grid Margin="20">
-        <Grid.RowDefinitions>
+        <!--<Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition />
-        </Grid.RowDefinitions>
+        </Grid.RowDefinitions>-->
         <Grid.ColumnDefinitions>
             <ColumnDefinition MinWidth="400" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.RowSpan="2"
-                    Grid.Column="0"
+        <StackPanel Grid.Column="0"
                     Orientation="Vertical">            
 
             <Grid>
@@ -108,18 +107,15 @@
 
             <DateStartEnd:DateStartEndView DataContext="{Binding DateStartEndViewModel}" />
 
-            <Button Content="Печать"
-                    Command="{Binding PrintCommand}" />
-
-            <TextBlock Text="Значения сахара" HorizontalAlignment="Center" />
-
             <Separator Opacity="0"
                        Height="10" />
+
+            <TextBlock Text="Значения сахара" HorizontalAlignment="Center" />
 
             <StackPanel Orientation="Horizontal">
 
                 <RadioButton GroupName="Sugar"
-                             VerticalAlignment="Top"
+                             VerticalAlignment="Center"
                              Content="Очень высокое"
                              IsChecked="{Binding Path=RadioButton1, Mode=TwoWay}" />
 
@@ -139,17 +135,39 @@
                              Content="Нормальное"
                              IsChecked="{Binding Path=RadioButton3, Mode=TwoWay}" />
 
+                <Separator Opacity="0"
+                           Width="20" />
+
+                <ToggleButton HorizontalAlignment="Center"
+                              IsChecked="{Binding CountListChecked}"
+                              Margin="5"
+                              Padding="5"
+                              Width="80">                    
+                    <ToggleButton.Style>
+                        <Style TargetType="{x:Type ToggleButton}">
+                            <Setter Property="Content"
+                                    Value="Короткий" />
+                            <Style.Triggers>
+                                <Trigger Property="IsChecked"
+                                         Value="True">
+                                    <Setter Property="Content"
+                                            Value="Полный" />
+                                    <!--<Setter Property="Foreground"
+                                            Value="Green" />-->
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ToggleButton.Style>
+                </ToggleButton>
+
             </StackPanel>
 
-            
-
-            
-            
+            <Button Content="Печать"
+                    Command="{Binding PrintCommand}" />
 
         </StackPanel>
 
-        <ListBloodSugar:ListBloodSugarView Grid.RowSpan="2"
-                                           Grid.Column="2"
+        <ListBloodSugar:ListBloodSugarView Grid.Column="2"
                                            Margin="10,0,10,0"
                                            DataContext="{Binding ListBloodSugarViewModel}" />
 
