@@ -7,14 +7,11 @@ using CommunityToolkit.Mvvm.Messaging;
 using NetDayHospital.Core.Controls.DateStartEnd;
 using NetDayHospital.Core.Controls.DateStartEnd.Messages;
 using NetDayHospital.Core.Controls.ListBloodSugar;
-using NetDayHospital.Core.Helpers;
 using NetDayHospital.Core.Models;
 using NetDayHospital.Core.Models.Table.System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Net;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 
@@ -22,8 +19,8 @@ namespace BloodSugar;
 
 internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateStartEndMessege>
 {
+    const string FIELD_REGUIRED_ERROR_MESSAGE = "Заполните поле:\nПример:\n";
     private readonly SugarRandom sugarRandom;
-    private bool updateTable = false;
     private int selectDays;
 
     public MainWindowModel()
@@ -32,10 +29,10 @@ internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateS
         sugarRandom = new SugarRandom();
         InitRadioButton(1);
         selectDays = 7;
-        StartMonitorGetRecordsAsync();
-
-        FullName = "Фатеева Юлия Николаевна";
-        BirthDateFull = "30.07.1960 (63 года)";
+        UpdateBoolTable = false;
+        FullName = string.Empty;
+        BirthDateFull = string.Empty;
+        StartMonitorGetRecordsAsync();       
     }
 
     #region Подключение работы с буфером обмена.
@@ -54,7 +51,7 @@ internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateS
     private ListBloodSugarViewModel _ListBloodSugarViewModel = new();
     #endregion
 
-    #region Кнопки выбора вариантов сложности сахаров
+    #region Кнопки выбора вариантов сложности сахаров.
 
     [ObservableProperty]
     private bool _RadioButton1 = false;
@@ -89,6 +86,22 @@ internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateS
         }
     }
 
+    #region Метод инициализации RadioButton
+    /// <summary>
+    /// Инициализации включения RadioButton
+    /// </summary>
+    /// <param name="num"></param>
+    private void InitRadioButton(int num)
+    {
+        switch (num)
+        {
+            case 1: RadioButton1 = true; break;
+            case 2: RadioButton2 = true; break;
+            case 3: RadioButton3 = true; break;
+        }
+    }
+    #endregion
+
     #endregion
 
     #region Кнопка изменения варианта списка.
@@ -111,34 +124,33 @@ internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateS
     }
     #endregion
 
+    #region Свойство UpdateBoolTable
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(PrintCommand))]
+    private bool _UpdateBoolTable; 
+    #endregion
+
     #region Поле FullName
 
     [ObservableProperty]
     [NotifyDataErrorInfo]
-    [Required]
+    [Required(ErrorMessage = FIELD_REGUIRED_ERROR_MESSAGE + "Иванов Иван Иванович")]
     [RegularExpression(@"^([А-Я][а-я]+ ?){2,5}", ErrorMessage = "Только русские буквы. \n От 2 до 5 слов.")]
-    private string _FullName = string.Empty;
+    [NotifyCanExecuteChangedFor(nameof(PrintCommand))]
+    private string _FullName;
     #endregion
 
     #region Поле BirthDateFull Дата рождения и возраст
 
     [ObservableProperty]
     [NotifyDataErrorInfo]
-    [Required]
+    [Required(ErrorMessage = FIELD_REGUIRED_ERROR_MESSAGE + "01.01.1960 (70 лет)")]
     [RegularExpression(@"^\d\d\.\d\d\.\d\d\d\d \(\d\d ((Г|г)ода?|(Л|л)ет)\)",
         ErrorMessage = "01.01.1960 (70 лет)\nВарианты:\nГод, Года, Лет\nгод, года, лет")]
-    private string _BirthDateFull = string.Empty;
-    #endregion
-
-    private void InitRadioButton(int num)
-    {
-        switch (num)
-        {
-            case 1: RadioButton1 = true; break;
-            case 2: RadioButton2 = true; break;
-            case 3: RadioButton3 = true; break;
-        }
-    }
+    [NotifyCanExecuteChangedFor(nameof(PrintCommand))]
+    private string _BirthDateFull;
+    #endregion    
 
     private void CreateValueSugar(int level)
     {
@@ -184,7 +196,12 @@ internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateS
     }
     #endregion
 
-    [RelayCommand]
+    private bool PrintClick()
+    {
+        return !HasErrors && UpdateBoolTable;
+    }
+
+    [RelayCommand(CanExecute = nameof(PrintClick))]
     private void Print()
     {
         Person person = new()
@@ -213,7 +230,7 @@ internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateS
 
     private void UpdateTable()
     {
-        if (updateTable)
+        if (UpdateBoolTable)
         {
             ListBloodSugarViewModel.UpdateTable(
             start: DateStartEndViewModel.SelectedDateStart!.Value,
@@ -226,7 +243,7 @@ internal partial class MainWindowModel : BaseViewModel, IRecipient<ComplectDateS
 
     public void Receive(ComplectDateStartEndMessege message)
     {
-        updateTable = message.Value;
+        UpdateBoolTable = message.Value;
         UpdateTable();
     }
 }
