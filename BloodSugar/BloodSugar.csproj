@@ -26,14 +26,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\NetDayHospital.Core\ClipoardPerson\ClipoardPerson.csproj" />
-    <ProjectReference Include="..\..\NetDayHospital.Core\NetDayHospital.Core\NetDayHospital.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="Controls\" />
     <Folder Include="Messeges\" />
     <Folder Include="Temp\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\NetDayHospital.Core\ClipoardPerson\ClipoardPerson.csproj" />
+    <ProjectReference Include="..\..\NetDayHospital.Core\NetDayHospital.Core\NetDayHospital.Core.csproj" />
   </ItemGroup>
 
 </Project>
